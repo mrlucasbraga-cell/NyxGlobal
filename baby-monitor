@@ -1,0 +1,223 @@
+<div class="badge">
+📹 Old Phone Security Cam
+</div>
+
+<h1>Privacy Policy</h1>
+```
+
+por:
+
+```html
+<div class="badge">
+👶 Baby Monitor
+</div>
+
+<h1>Privacy Policy</h1>
+
+<p>
+Professional baby monitoring solution for Android devices.
+</p>
+```
+
+---
+
+### Texto em Inglês
+
+Substitua todo o conteúdo da seção 🇺🇸 por:
+
+```html
+<p><strong>Last updated:</strong> May 2026</p>
+
+<p>
+This Privacy Policy governs the use of the mobile application
+"Baby Monitor" created for Android devices.
+The Application functions as a local, real-time monitoring utility
+that allows users to stream video and audio between devices within
+the same local Wi-Fi network.
+</p>
+
+<h3>1. Information Collection and Use</h3>
+
+<p>
+The Application does not collect, store, or transmit any personally
+identifiable information, personal data, or user communications.
+All video streaming, audio processing, and motion detection are
+performed strictly locally and in real-time on the user's local
+network interface.
+No data, video feeds, or audio tracks are ever uploaded to
+external servers or cloud storage services.
+</p>
+
+<h3>2. Device Permissions</h3>
+
+<div class="permissions">
+<ul>
+<li><strong>Camera:</strong> Required to capture video streams for real-time visual monitoring.</li>
+<li><strong>Microphone:</strong> Required to capture audio streams and environmental sounds.</li>
+<li><strong>Notifications:</strong> Required to maintain foreground services on Android 13+.</li>
+</ul>
+</div>
+
+<p>
+These permissions are used exclusively for local communication
+between your devices and are never used for external data collection.
+</p>
+
+<h3>3. Advertising (Google AdMob)</h3>
+
+<p>
+The Application uses Google AdMob to display advertisements.
+AdMob may collect pseudonymous identifiers such as Advertising ID
+to provide relevant ads and measure performance.
+</p>
+
+<h3>4. Protection of Minors and Family Policy</h3>
+
+<p>
+The Application is intended for parents and guardians but does not
+collect data from children. We comply with Google Play Families
+Policy and COPPA requirements. No personal information from minors
+is collected, tracked, or shared.
+</p>
+
+<h3>5. Changes to This Privacy Policy</h3>
+
+<p>
+We may update this Privacy Policy periodically.
+Users are encouraged to review this page regularly.
+</p>
+```
+
+---
+
+### Texto em Espanhol
+
+Substitua a seção 🇪🇸 por:
+
+```html
+<p><strong>Última actualización:</strong> Mayo de 2026</p>
+
+<p>
+Esta Política de Privacidad regula el uso de la aplicación móvil
+Baby Monitor para dispositivos Android.
+</p>
+
+<h3>1. Recopilación y Uso de la Información</h3>
+
+<p>
+La Aplicación no recopila, almacena ni transmite información
+personal identificable. Toda la transmisión de vídeo, el
+procesamiento de audio y la detección de movimiento se realizan
+estrictamente de forma local y en tiempo real.
+</p>
+
+<h3>2. Permisos del Dispositivo</h3>
+
+<div class="permissions">
+<ul>
+<li><strong>Cámara:</strong> Monitoreo visual en tiempo real.</li>
+<li><strong>Micrófono:</strong> Captura de audio y sonidos ambientales.</li>
+<li><strong>Notificaciones:</strong> Funcionamiento estable en Android 13 o superior.</li>
+</ul>
+</div>
+
+<h3>3. Publicidad (Google AdMob)</h3>
+
+<p>
+La Aplicación utiliza Google AdMob para mostrar anuncios y medir
+su rendimiento.
+</p>
+
+<h3>4. Protección de Menores y Política de Familias</h3>
+
+<p>
+La Aplicación está dirigida a padres y tutores, pero no recopila
+datos de menores. Cumplimos con la Política de Familias de Google
+Play y COPPA.
+</p>
+
+<h3>5. Cambios en esta Política</h3>
+
+<p>
+Esta política puede actualizarse periódicamente.
+</p>
+```
+
+---
+
+### Texto em Português
+
+Substitua a seção 🇧🇷 por:
+
+```html
+<p><strong>Última atualização:</strong> Maio de 2026</p>
+
+<p>
+Esta Política de Privacidade rege o uso do aplicativo móvel
+Baby Monitor para dispositivos Android.
+</p>
+
+<h3>1. Coleta e Uso de Informações</h3>
+
+<p>
+O Aplicativo não coleta, armazena ou transmite qualquer informação
+de identificação pessoal. Toda a transmissão de vídeo,
+processamento de áudio e detecção de movimento são realizados
+estritamente de forma local e em tempo real.
+</p>
+
+<h3>2. Permissões do Dispositivo</h3>
+
+<div class="permissions">
+<ul>
+<li><strong>Câmera:</strong> Monitoramento visual em tempo real.</li>
+<li><strong>Microfone:</strong> Captura de áudio e sons do ambiente.</li>
+<li><strong>Notificações:</strong> Funcionamento estável em Android 13 ou superior.</li>
+</ul>
+</div>
+
+<h3>3. Publicidade (Google AdMob)</h3>
+
+<p>
+O Aplicativo utiliza Google AdMob para exibir anúncios e medir
+seu desempenho.
+</p>
+
+<h3>4. Privacidade de Menores e Política de Famílias</h3>
+
+<p>
+O Aplicativo foi desenvolvido para pais e responsáveis, mas não
+coleta dados de crianças. Cumprimos rigorosamente a Política para
+Famílias do Google Play e os requisitos da COPPA.
+</p>
+
+<h3>5. Alterações nesta Política de Privacidade</h3>
+
+<p>
+Esta política poderá ser atualizada periodicamente.
+</p>
+```
+
+---
+
+### Rodapé de Contato
+
+Mantenha exatamente igual:
+
+```html
+<div class="contact-card">
+
+<h3>Nyx Global Apps™</h3>
+
+<p>
+228 Park Ave S Suite 7563<br>
+New York, NY 10003<br>
+United States
+</p>
+
+<p>
+support@nyxglobalapps.com
+</p>
+
+</div>
+```
