@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin - Login</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+  body { background: #1a1a2e; height: 100vh; display: flex; align-items: center; justify-content: center; }
+  .card { background: #fff; padding: 40px; border-radius: 12px; width: 100%; max-width: 360px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+  h1 { font-size: 22px; margin-bottom: 24px; color: #222; text-align: center; }
+  input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+  button { width: 100%; padding: 12px; background: #1a1a2e; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; }
+  button:hover { background: #33334d; }
+  #erro { color: #d32f2f; font-size: 13px; margin-top: 10px; text-align: center; display: none; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Painel Administrativo</h1>
+  <input type="email" id="email" placeholder="E-mail">
+  <input type="password" id="senha" placeholder="Senha">
+  <button onclick="fazerLogin()">Entrar</button>
+  <p id="erro"></p>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script>
+  // ATENÇÃO: cole aqui o firebaseConfig do seu projeto (Firebase Console -> Configurações -> Web app)
+  const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "apploja-4c66b.firebaseapp.com",
+    projectId: "apploja-4c66b",
+    storageBucket: "apploja-4c66b.appspot.com",
+    messagingSenderId: "SEU_SENDER_ID",
+    appId: "SEU_APP_ID"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // Se já estiver logado, vai direto pro dashboard
+  auth.onAuthStateChanged((user) => {
+    if (user) window.location.href = "dashboard.html";
+  });
+
+  function fazerLogin() {
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value;
+    const erroEl = document.getElementById("erro");
+    erroEl.style.display = "none";
+
+    auth.signInWithEmailAndPassword(email, senha)
+      .then(() => {
+        window.location.href = "dashboard.html";
+      })
+      .catch((error) => {
+        erroEl.textContent = "E-mail ou senha inválidos.";
+        erroEl.style.display = "block";
+      });
+  }
+</script>
+</body>
+</html>
