@@ -127,10 +127,9 @@
   }
 
   function calcularStatus(loja) {
-    // MELHORIA 1: Bloqueio manual ganha prioridade absoluta sobre o tempo de cadastro
-    if (loja.ativo === false) return "bloqueada";
     const dias = diasDesde(loja.dataCadastro);
     if (dias < 30) return "teste";
+    if (loja.ativo === false) return "bloqueada";
     return "ativa";
   }
 
@@ -138,11 +137,6 @@
     if (!timestamp) return "-";
     const data = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
     return data.toLocaleDateString("pt-BR");
-  }
-
-  // MELHORIA 2: Função centralizada para formatação R$ em formato real brasileiro
-  function formatarMoeda(valor) {
-    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
   function filtrar(tipo) {
@@ -174,25 +168,16 @@
 
       const statusLabel = { teste: "Em teste", ativa: "Ativa", bloqueada: "Bloqueada" }[status];
 
-      // MELHORIA 3: Botão "Marcar Pago" fica desabilitado em cinza se a loja já tiver pago
-      const botaoPagarHTML = loja.pagoEstaSemana 
-        ? `<button class="btn-pagar" style="background:#ccc; cursor:not-allowed;" disabled>Pago</button>`
-        : `<button class="btn-pagar" onclick="marcarPago('${loja.id}')">Marcar Pago</button>`;
-
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td><strong>${loja.nome || "(sem nome)"}</strong></td>
+        <td>${loja.nome || "(sem nome)"}</td>
         <td><span class="status ${status}">${statusLabel}</span></td>
         <td>${pedidos}</td>
-        <td>${formatarMoeda(valorDevido)}</td>
-        <td>
-          <span style="color: ${loja.pagoEstaSemana ? '#2E7D32' : '#C62828'}; font-weight: bold;">
-            ${loja.pagoEstaSemana ? "Sim" : "Não"}
-          </span>
-        </td>
+        <td>R$ ${valorDevido.toFixed(2)}</td>
+        <td>${loja.pagoEstaSemana ? "Sim" : "Não"}</td>
         <td>${formatarData(loja.dataCadastro)}</td>
         <td class="acoes">
-          ${botaoPagarHTML}
+          <button class="btn-pagar" onclick="marcarPago('${loja.id}')">Marcar Pago</button>
           ${loja.ativo === false
             ? `<button class="btn-desbloquear" onclick="alterarAtivo('${loja.id}', true)">Desbloquear</button>`
             : `<button class="btn-bloquear" onclick="alterarAtivo('${loja.id}', false)">Bloquear</button>`
@@ -206,7 +191,7 @@
     document.getElementById("totalTeste").textContent = totalTeste;
     document.getElementById("totalAtivas").textContent = totalAtivas;
     document.getElementById("totalBloqueadas").textContent = totalBloqueadas;
-    document.getElementById("totalReceber").textContent = formatarMoeda(totalReceber);
+    document.getElementById("totalReceber").textContent = "R$ " + totalReceber.toFixed(2);
   }
 
   function marcarPago(lojaId) {
