@@ -1,81 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Admin - Lojas</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-  body { background: #f5f7fa; padding: 20px; }
-  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-  h1 { font-size: 20px; color: #222; }
-  #btnSair { background: #eee; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; }
-
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
-  .card { background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-  .card .valor { font-size: 24px; font-weight: bold; color: #222; }
-  .card .label { font-size: 12px; color: #777; margin-top: 4px; }
-
-  .filtros { margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
-  .filtros button { padding: 8px 14px; border: 1px solid #ddd; background: #fff; border-radius: 20px; cursor: pointer; font-size: 13px; }
-  .filtros button.ativo { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
-
-  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-  th, td { padding: 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #eee; }
-  th { background: #fafafa; color: #555; font-size: 12px; text-transform: uppercase; }
-
-  .status { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block; }
-  .status.teste { background: #FFF3E0; color: #E65100; }
-  .status.ativa { background: #E8F5E9; color: #2E7D32; }
-  .status.bloqueada { background: #FFEBEE; color: #C62828; }
-
-  .acoes button { padding: 6px 10px; margin-right: 4px; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; }
-  .btn-pagar { background: #2E7D32; color: #fff; }
-  .btn-bloquear { background: #C62828; color: #fff; }
-  .btn-desbloquear { background: #1976D2; color: #fff; }
-
-  #loading { text-align: center; padding: 40px; color: #777; }
-</style>
-</head>
-<body>
-
-<header>
-  <h1>Painel Administrativo — Lojas</h1>
-  <button id="btnSair" onclick="sair()">Sair</button>
-</header>
-
-<div class="cards">
-  <div class="card"><div class="valor" id="totalLojas">-</div><div class="label">Total de lojas</div></div>
-  <div class="card"><div class="valor" id="totalTeste">-</div><div class="label">Em período de teste</div></div>
-  <div class="card"><div class="valor" id="totalAtivas">-</div><div class="label">Ativas e em dia</div></div>
-  <div class="card"><div class="valor" id="totalBloqueadas">-</div><div class="label">Bloqueadas</div></div>
-  <div class="card"><div class="valor" id="totalReceber">-</div><div class="label">A receber esta semana</div></div>
-</div>
-
-<div class="filtros">
-  <button class="ativo" data-filtro="todas" onclick="filtrar('todas')">Todas</button>
-  <button data-filtro="teste" onclick="filtrar('teste')">Em teste</button>
-  <button data-filtro="ativa" onclick="filtrar('ativa')">Ativas</button>
-  <button data-filtro="bloqueada" onclick="filtrar('bloqueada')">Bloqueadas</button>
-</div>
-
-<div id="loading">Carregando lojas...</div>
-
-<table id="tabelaLojas" style="display:none;">
-  <thead>
-    <tr>
-      <th>Loja</th>
-      <th>Status</th>
-      <th>Pedidos / Semana</th>
-      <th>Valor devido</th>
-      <th>Pago?</th>
-      <th>Cadastro</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody id="corpoTabela"></tbody>
-</table>
-
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
@@ -92,6 +14,8 @@
   const auth = firebase.auth();
   const db = firebase.firestore();
 
+  // ATENÇÃO: Segurança baseada apenas em UID no Front-end é frágil.
+  // Certifique-se de que suas "Firestore Rules" bloqueiam acessos de não-admins no banco de dados!
   const ADMIN_UID = "J4kDE5WmWETA52bpK2EnDj6LhLw2";
 
   let lojasCache = [];
@@ -106,7 +30,9 @@
   });
 
   function sair() {
-    auth.signOut().then(() => window.location.href = "login.html");
+    auth.signOut()
+      .then(() => window.location.href = "login.html")
+      .catch(err => console.error("Erro ao sair:", err));
   }
 
   function carregarLojas() {
@@ -115,7 +41,13 @@
       snapshot.forEach((doc) => {
         lojasCache.push({ id: doc.id, ...doc.data() });
       });
-      renderizar();
+      
+      // Separamos a lógica: primeiro atualiza os cards globais, depois renderiza a tabela
+      atualizarCardsGlobais();
+      renderizarTabela();
+    }, (error) => {
+      console.error("Erro ao carregar lojas do Firestore:", error);
+      alert("Erro ao carregar os dados. Verifique sua conexão ou permissões.");
     });
   }
 
@@ -127,9 +59,9 @@
   }
 
   function calcularStatus(loja) {
+    if (loja.ativo === false) return "bloqueada";
     const dias = diasDesde(loja.dataCadastro);
     if (dias < 30) return "teste";
-    if (loja.ativo === false) return "bloqueada";
     return "ativa";
   }
 
@@ -139,20 +71,23 @@
     return data.toLocaleDateString("pt-BR");
   }
 
+  function formatarMoeda(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
   function filtrar(tipo) {
     filtroAtual = tipo;
     document.querySelectorAll(".filtros button").forEach(b => b.classList.remove("ativo"));
-    document.querySelector(`[data-filtro="${tipo}"]`).classList.add("ativo");
-    renderizar();
+    
+    const botaoAtivo = document.querySelector(`[data-filtro="${tipo}"]`);
+    if (botaoAtivo) botaoAtivo.classList.add("ativo");
+    
+    renderizarTabela();
   }
 
-  function renderizar() {
-    document.getElementById("loading").style.display = "none";
-    document.getElementById("tabelaLojas").style.display = "table";
-
+  // NOVA FUNÇÃO: Calcula os contadores uma única vez, independente do filtro de visualização da tabela
+  function atualizarCardsGlobais() {
     let totalTeste = 0, totalAtivas = 0, totalBloqueadas = 0, totalReceber = 0;
-    const corpo = document.getElementById("corpoTabela");
-    corpo.innerHTML = "";
 
     lojasCache.forEach((loja) => {
       const status = calcularStatus(loja);
@@ -161,53 +96,113 @@
       if (status === "bloqueada") totalBloqueadas++;
 
       const pedidos = loja.totalPedidosSemana || 0;
-      const valorDevido = pedidos * 1.0;
-      if (status !== "teste" && !loja.pagoEstaSemana) totalReceber += valorDevido;
-
-      if (filtroAtual !== "todas" && filtroAtual !== status) return;
-
-      const statusLabel = { teste: "Em teste", ativa: "Ativa", bloqueada: "Bloqueada" }[status];
-
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${loja.nome || "(sem nome)"}</td>
-        <td><span class="status ${status}">${statusLabel}</span></td>
-        <td>${pedidos}</td>
-        <td>R$ ${valorDevido.toFixed(2)}</td>
-        <td>${loja.pagoEstaSemana ? "Sim" : "Não"}</td>
-        <td>${formatarData(loja.dataCadastro)}</td>
-        <td class="acoes">
-          <button class="btn-pagar" onclick="marcarPago('${loja.id}')">Marcar Pago</button>
-          ${loja.ativo === false
-            ? `<button class="btn-desbloquear" onclick="alterarAtivo('${loja.id}', true)">Desbloquear</button>`
-            : `<button class="btn-bloquear" onclick="alterarAtivo('${loja.id}', false)">Bloquear</button>`
-          }
-        </td>
-      `;
-      corpo.appendChild(tr);
+      const valorDevido = pedidos * 1.0; 
+      if (status !== "teste" && !loja.pagoEstaSemana) {
+        totalReceber += valorDevido;
+      }
     });
 
     document.getElementById("totalLojas").textContent = lojasCache.length;
     document.getElementById("totalTeste").textContent = totalTeste;
     document.getElementById("totalAtivas").textContent = totalAtivas;
     document.getElementById("totalBloqueadas").textContent = totalBloqueadas;
-    document.getElementById("totalReceber").textContent = "R$ " + totalReceber.toFixed(2);
+    document.getElementById("totalReceber").textContent = formatarMoeda(totalReceber);
+  }
+
+  function renderizarTabela() {
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("tabelaLojas").style.display = "table";
+
+    const corpo = document.getElementById("corpoTabela");
+    corpo.innerHTML = "";
+
+    // Filtra as lojas que vão de fato aparecer na tela
+    const lojasFiltradas = lojasCache.filter(loja => {
+      if (filtroAtual === "todas") return true;
+      return calcularStatus(loja) === filtroAtual;
+    });
+
+    if (lojasFiltradas.length === 0) {
+      corpo.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">Nenhuma loja encontrada neste filtro.</td></tr>`;
+      return;
+    }
+
+    // Criamos um fragmento para injetar no DOM de uma vez só (Melhor performance)
+    const fragmento = document.createDocumentFragment();
+
+    lojasFiltradas.forEach((loja) => {
+      const status = calcularStatus(loja);
+      const pedidos = loja.totalPedidosSemana || 0;
+      const valorDevido = pedidos * 1.0;
+      const statusLabel = { teste: "Em teste", ativa: "Ativa", bloqueada: "Bloqueada" }[status];
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><strong>${loja.nome || "(sem nome)"}</strong></td>
+        <td><span class="status ${status}">${statusLabel}</span></td>
+        <td>${pedidos}</td>
+        <td>${formatarMoeda(valorDevido)}</td>
+        <td>
+          <span style="color: ${loja.pagoEstaSemana ? '#2E7D32' : '#C62828'}; font-weight: bold;">
+            ${loja.pagoEstaSemana ? "Sim" : "Não"}
+          </span>
+        </td>
+        <td>${formatarData(loja.dataCadastro)}</td>
+        <td class="acoes">
+          ${!loja.pagoEstaSemana 
+            ? `<button class="btn-pagar" onclick="marcarPago('${loja.id}')">Marcar Pago</button>` 
+            : `<button class="btn-pagar" style="background:#ccc; cursor:not-allowed;" disabled>Pago</button>`
+          }
+          ${loja.ativo === false
+            ? `<button class="btn-desbloquear" onclick="alterarAtivo('${loja.id}', true)">Desbloquear</button>`
+            : `<button class="btn-bloquear" onclick="alterarAtivo('${loja.id}', false)">Bloquear</button>`
+          }
+        </td>
+      `;
+      fragmento.appendChild(tr);
+    });
+
+    corpo.appendChild(fragmento);
+  }
+
+  // Desativa o botão temporariamente para evitar cliques duplos (Debounce manual)
+  function desabilitarBotao(event) {
+    if (event && event.target) {
+      event.target.disabled = true;
+      event.target.textContent = "Processando...";
+    }
   }
 
   function marcarPago(lojaId) {
     if (!confirm("Confirmar que o pagamento desta loja foi recebido?")) return;
+    
+    desabilitarBotao(window.event);
+
     db.collection("lojas").doc(lojaId).update({
       pagoEstaSemana: true,
       totalPedidosSemana: 0,
       ativo: true
+    })
+    .then(() => console.log("Loja marcada como paga com sucesso."))
+    .catch(err => {
+      console.error("Erro ao atualizar pagamento:", err);
+      alert("Falha ao salvar no banco de dados. Tente novamente.");
+      renderizarTabela(); // Recarrega para voltar o botão ao normal
     });
   }
 
   function alterarAtivo(lojaId, novoStatus) {
     const acao = novoStatus ? "desbloquear" : "bloquear";
     if (!confirm(`Confirmar que deseja ${acao} esta loja?`)) return;
-    db.collection("lojas").doc(lojaId).update({ ativo: novoStatus });
+    
+    desabilitarBotao(window.event);
+
+    db.collection("lojas").doc(lojaId).update({ ativo: novoStatus })
+    .then(() => console.log(`Loja alterada para ${novoStatus ? 'ativa' : 'bloqueada'}.`))
+    .catch(err => {
+      console.error("Erro ao alterar status de atividade:", err);
+      alert("Erro ao alterar status. Tente novamente.");
+      renderizarTabela();
+    });
   }
 </script>
-</body>
-</html>
