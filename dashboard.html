@@ -1,3 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin - Lojas</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+  body { background: #f5f7fa; padding: 20px; }
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  h1 { font-size: 20px; color: #222; }
+  #btnSair { background: #eee; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .card { background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+  .card .valor { font-size: 24px; font-weight: bold; color: #222; }
+  .card .label { font-size: 12px; color: #777; margin-top: 4px; }
+
+  .filtros { margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .filtros button { padding: 8px 14px; border: 1px solid #ddd; background: #fff; border-radius: 20px; cursor: pointer; font-size: 13px; }
+  .filtros button.ativo { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+  th, td { padding: 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #eee; }
+  th { background: #fafafa; color: #555; font-size: 12px; text-transform: uppercase; }
+
+  .status { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block; }
+  .status.teste { background: #FFF3E0; color: #E65100; }
+  .status.ativa { background: #E8F5E9; color: #2E7D32; }
+  .status.bloqueada { background: #FFEBEE; color: #C62828; }
+
+  .acoes button { padding: 6px 10px; margin-right: 4px; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  .btn-pagar { background: #2E7D32; color: #fff; }
+  .btn-bloquear { background: #C62828; color: #fff; }
+  .btn-desbloquear { background: #1976D2; color: #fff; }
+
+  #loading { text-align: center; padding: 40px; color: #777; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Painel Administrativo — Lojas</h1>
+  <button id="btnSair" onclick="sair()">Sair</button>
+</header>
+
+<div class="cards">
+  <div class="card"><div class="valor" id="totalLojas">-</div><div class="label">Total de lojas</div></div>
+  <div class="card"><div class="valor" id="totalTeste">-</div><div class="label">Em período de teste</div></div>
+  <div class="card"><div class="valor" id="totalAtivas">-</div><div class="label">Ativas e em dia</div></div>
+  <div class="card"><div class="valor" id="totalBloqueadas">-</div><div class="label">Bloqueadas</div></div>
+  <div class="card"><div class="valor" id="totalReceber">-</div><div class="label">A receber esta semana</div></div>
+</div>
+
+<div class="filtros">
+  <button class="ativo" data-filtro="todas" onclick="filtrar('todas')">Todas</button>
+  <button data-filtro="teste" onclick="filtrar('teste')">Em teste</button>
+  <button data-filtro="ativa" onclick="filtrar('ativa')">Ativas</button>
+  <button data-filtro="bloqueada" onclick="filtrar('bloqueada')">Bloqueadas</button>
+</div>
+
+<div id="loading">Carregando lojas...</div>
+
+<table id="tabelaLojas" style="display:none;">
+  <thead>
+    <tr>
+      <th>Loja</th>
+      <th>Status</th>
+      <th>Pedidos / Semana</th>
+      <th>Valor devido</th>
+      <th>Pago?</th>
+      <th>Cadastro</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody id="corpoTabela"></tbody>
+</table>
+
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
@@ -28,9 +106,7 @@
   });
 
   function sair() {
-    auth.signOut()
-      .then(() => window.location.href = "login.html")
-      .catch(err => console.error("Erro ao sair:", err));
+    auth.signOut().then(() => window.location.href = "login.html");
   }
 
   function carregarLojas() {
@@ -39,11 +115,7 @@
       snapshot.forEach((doc) => {
         lojasCache.push({ id: doc.id, ...doc.data() });
       });
-      
-      atualizarCardsGlobais();
-      renderizarTabela();
-    }, (error) => {
-      console.error("Erro no Firestore:", error);
+      renderizar();
     });
   }
 
@@ -55,6 +127,7 @@
   }
 
   function calcularStatus(loja) {
+    // MELHORIA 1: Bloqueio manual ganha prioridade absoluta sobre o tempo de cadastro
     if (loja.ativo === false) return "bloqueada";
     const dias = diasDesde(loja.dataCadastro);
     if (dias < 30) return "teste";
@@ -67,6 +140,7 @@
     return data.toLocaleDateString("pt-BR");
   }
 
+  // MELHORIA 2: Função centralizada para formatação R$ em formato real brasileiro
   function formatarMoeda(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
@@ -74,13 +148,17 @@
   function filtrar(tipo) {
     filtroAtual = tipo;
     document.querySelectorAll(".filtros button").forEach(b => b.classList.remove("ativo"));
-    const botaoAtivo = document.querySelector(`[data-filtro="${tipo}"]`);
-    if (botaoAtivo) botaoAtivo.classList.add("ativo");
-    renderizarTabela();
+    document.querySelector(`[data-filtro="${tipo}"]`).classList.add("ativo");
+    renderizar();
   }
 
-  function atualizarCardsGlobais() {
+  function renderizar() {
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("tabelaLojas").style.display = "table";
+
     let totalTeste = 0, totalAtivas = 0, totalBloqueadas = 0, totalReceber = 0;
+    const corpo = document.getElementById("corpoTabela");
+    corpo.innerHTML = "";
 
     lojasCache.forEach((loja) => {
       const status = calcularStatus(loja);
@@ -89,43 +167,17 @@
       if (status === "bloqueada") totalBloqueadas++;
 
       const pedidos = loja.totalPedidosSemana || 0;
-      const valorDevido = pedidos * 1.0; 
-      if (status !== "teste" && !loja.pagoEstaSemana) {
-        totalReceber += valorDevido;
-      }
-    });
-
-    document.getElementById("totalLojas").textContent = lojasCache.length;
-    document.getElementById("totalTeste").textContent = totalTeste;
-    document.getElementById("totalAtivas").textContent = totalAtivas;
-    document.getElementById("totalBloqueadas").textContent = totalBloqueadas;
-    document.getElementById("totalReceber").textContent = formatarMoeda(totalReceber);
-  }
-
-  function renderizarTabela() {
-    document.getElementById("loading").style.display = "none";
-    document.getElementById("tabelaLojas").style.display = "table";
-
-    const corpo = document.getElementById("corpoTabela");
-    corpo.innerHTML = "";
-
-    const lojasFiltradas = lojasCache.filter(loja => {
-      if (filtroAtual === "todas") return true;
-      return calcularStatus(loja) === filtroAtual;
-    });
-
-    if (lojasFiltradas.length === 0) {
-      corpo.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">Nenhuma loja encontrada.</td></tr>`;
-      return;
-    }
-
-    const fragmento = document.createDocumentFragment();
-
-    lojasFiltradas.forEach((loja) => {
-      const status = calcularStatus(loja);
-      const pedidos = loja.totalPedidosSemana || 0;
       const valorDevido = pedidos * 1.0;
+      if (status !== "teste" && !loja.pagoEstaSemana) totalReceber += valorDevido;
+
+      if (filtroAtual !== "todas" && filtroAtual !== status) return;
+
       const statusLabel = { teste: "Em teste", ativa: "Ativa", bloqueada: "Bloqueada" }[status];
+
+      // MELHORIA 3: Botão "Marcar Pago" fica desabilitado em cinza se a loja já tiver pago
+      const botaoPagarHTML = loja.pagoEstaSemana 
+        ? `<button class="btn-pagar" style="background:#ccc; cursor:not-allowed;" disabled>Pago</button>`
+        : `<button class="btn-pagar" onclick="marcarPago('${loja.id}')">Marcar Pago</button>`;
 
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -140,57 +192,37 @@
         </td>
         <td>${formatarData(loja.dataCadastro)}</td>
         <td class="acoes">
-          ${!loja.pagoEstaSemana 
-            ? `<button class="btn-pagar" id="btn-pagar-${loja.id}" onclick="marcarPago('${loja.id}')">Marcar Pago</button>` 
-            : `<button class="btn-pagar" style="background:#ccc; cursor:not-allowed;" disabled>Pago</button>`
-          }
+          ${botaoPagarHTML}
           ${loja.ativo === false
-            ? `<button class="btn-desbloquear" id="btn-status-${loja.id}" onclick="alterarAtivo('${loja.id}', true)">Desbloquear</button>`
-            : `<button class="btn-bloquear" id="btn-status-${loja.id}" onclick="alterarAtivo('${loja.id}', false)">Bloquear</button>`
+            ? `<button class="btn-desbloquear" onclick="alterarAtivo('${loja.id}', true)">Desbloquear</button>`
+            : `<button class="btn-bloquear" onclick="alterarAtivo('${loja.id}', false)">Bloquear</button>`
           }
         </td>
       `;
-      fragmento.appendChild(tr);
+      corpo.appendChild(tr);
     });
 
-    corpo.appendChild(fragmento);
+    document.getElementById("totalLojas").textContent = lojasCache.length;
+    document.getElementById("totalTeste").textContent = totalTeste;
+    document.getElementById("totalAtivas").textContent = totalAtivas;
+    document.getElementById("totalBloqueadas").textContent = totalBloqueadas;
+    document.getElementById("totalReceber").textContent = formatarMoeda(totalReceber);
   }
 
   function marcarPago(lojaId) {
     if (!confirm("Confirmar que o pagamento desta loja foi recebido?")) return;
-    
-    const botao = document.getElementById(`btn-pagar-${lojaId}`);
-    if (botao) {
-      botao.disabled = true;
-      botao.textContent = "Processando...";
-    }
-
     db.collection("lojas").doc(lojaId).update({
       pagoEstaSemana: true,
       totalPedidosSemana: 0,
       ativo: true
-    }).catch(err => {
-      console.error("Erro ao pagar:", err);
-      alert("Erro ao salvar dados.");
-      renderizarTabela();
     });
   }
 
   function alterarAtivo(lojaId, novoStatus) {
     const acao = novoStatus ? "desbloquear" : "bloquear";
     if (!confirm(`Confirmar que deseja ${acao} esta loja?`)) return;
-    
-    const botao = document.getElementById(`btn-status-${lojaId}`);
-    if (botao) {
-      botao.disabled = true;
-      botao.textContent = "Processando...";
-    }
-
-    db.collection("lojas").doc(lojaId).update({ ativo: novoStatus })
-    .catch(err => {
-      console.error("Erro ao alterar atividade:", err);
-      alert("Erro ao alterar status.");
-      renderizarTabela();
-    });
+    db.collection("lojas").doc(lojaId).update({ ativo: novoStatus });
   }
 </script>
+</body>
+</html>
