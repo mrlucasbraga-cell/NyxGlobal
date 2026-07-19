@@ -14,8 +14,6 @@
   const auth = firebase.auth();
   const db = firebase.firestore();
 
-  // ATENÇÃO: Segurança baseada apenas em UID no Front-end é frágil.
-  // Certifique-se de que suas "Firestore Rules" bloqueiam acessos de não-admins no banco de dados!
   const ADMIN_UID = "J4kDE5WmWETA52bpK2EnDj6LhLw2";
 
   let lojasCache = [];
@@ -42,12 +40,10 @@
         lojasCache.push({ id: doc.id, ...doc.data() });
       });
       
-      // Separamos a lógica: primeiro atualiza os cards globais, depois renderiza a tabela
       atualizarCardsGlobais();
       renderizarTabela();
     }, (error) => {
-      console.error("Erro ao carregar lojas do Firestore:", error);
-      alert("Erro ao carregar os dados. Verifique sua conexão ou permissões.");
+      console.error("Erro no Firestore:", error);
     });
   }
 
@@ -78,14 +74,11 @@
   function filtrar(tipo) {
     filtroAtual = tipo;
     document.querySelectorAll(".filtros button").forEach(b => b.classList.remove("ativo"));
-    
     const botaoAtivo = document.querySelector(`[data-filtro="${tipo}"]`);
     if (botaoAtivo) botaoAtivo.classList.add("ativo");
-    
     renderizarTabela();
   }
 
-  // NOVA FUNÇÃO: Calcula os contadores uma única vez, independente do filtro de visualização da tabela
   function atualizarCardsGlobais() {
     let totalTeste = 0, totalAtivas = 0, totalBloqueadas = 0, totalReceber = 0;
 
@@ -116,18 +109,16 @@
     const corpo = document.getElementById("corpoTabela");
     corpo.innerHTML = "";
 
-    // Filtra as lojas que vão de fato aparecer na tela
     const lojasFiltradas = lojasCache.filter(loja => {
       if (filtroAtual === "todas") return true;
       return calcularStatus(loja) === filtroAtual;
     });
 
     if (lojasFiltradas.length === 0) {
-      corpo.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">Nenhuma loja encontrada neste filtro.</td></tr>`;
+      corpo.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">Nenhuma loja encontrada.</td></tr>`;
       return;
     }
 
-    // Criamos um fragmento para injetar no DOM de uma vez só (Melhor performance)
     const fragmento = document.createDocumentFragment();
 
     lojasFiltradas.forEach((loja) => {
@@ -150,12 +141,12 @@
         <td>${formatarData(loja.dataCadastro)}</td>
         <td class="acoes">
           ${!loja.pagoEstaSemana 
-            ? `<button class="btn-pagar" onclick="marcarPago('${loja.id}')">Marcar Pago</button>` 
+            ? `<button class="btn-pagar" id="btn-pagar-${loja.id}" onclick="marcarPago('${loja.id}')">Marcar Pago</button>` 
             : `<button class="btn-pagar" style="background:#ccc; cursor:not-allowed;" disabled>Pago</button>`
           }
           ${loja.ativo === false
-            ? `<button class="btn-desbloquear" onclick="alterarAtivo('${loja.id}', true)">Desbloquear</button>`
-            : `<button class="btn-bloquear" onclick="alterarAtivo('${loja.id}', false)">Bloquear</button>`
+            ? `<button class="btn-desbloquear" id="btn-status-${loja.id}" onclick="alterarAtivo('${loja.id}', true)">Desbloquear</button>`
+            : `<button class="btn-bloquear" id="btn-status-${loja.id}" onclick="alterarAtivo('${loja.id}', false)">Bloquear</button>`
           }
         </td>
       `;
@@ -165,29 +156,23 @@
     corpo.appendChild(fragmento);
   }
 
-  // Desativa o botão temporariamente para evitar cliques duplos (Debounce manual)
-  function desabilitarBotao(event) {
-    if (event && event.target) {
-      event.target.disabled = true;
-      event.target.textContent = "Processando...";
-    }
-  }
-
   function marcarPago(lojaId) {
     if (!confirm("Confirmar que o pagamento desta loja foi recebido?")) return;
     
-    desabilitarBotao(window.event);
+    const botao = document.getElementById(`btn-pagar-${lojaId}`);
+    if (botao) {
+      botao.disabled = true;
+      botao.textContent = "Processando...";
+    }
 
     db.collection("lojas").doc(lojaId).update({
       pagoEstaSemana: true,
       totalPedidosSemana: 0,
       ativo: true
-    })
-    .then(() => console.log("Loja marcada como paga com sucesso."))
-    .catch(err => {
-      console.error("Erro ao atualizar pagamento:", err);
-      alert("Falha ao salvar no banco de dados. Tente novamente.");
-      renderizarTabela(); // Recarrega para voltar o botão ao normal
+    }).catch(err => {
+      console.error("Erro ao pagar:", err);
+      alert("Erro ao salvar dados.");
+      renderizarTabela();
     });
   }
 
@@ -195,13 +180,16 @@
     const acao = novoStatus ? "desbloquear" : "bloquear";
     if (!confirm(`Confirmar que deseja ${acao} esta loja?`)) return;
     
-    desabilitarBotao(window.event);
+    const botao = document.getElementById(`btn-status-${lojaId}`);
+    if (botao) {
+      botao.disabled = true;
+      botao.textContent = "Processando...";
+    }
 
     db.collection("lojas").doc(lojaId).update({ ativo: novoStatus })
-    .then(() => console.log(`Loja alterada para ${novoStatus ? 'ativa' : 'bloqueada'}.`))
     .catch(err => {
-      console.error("Erro ao alterar status de atividade:", err);
-      alert("Erro ao alterar status. Tente novamente.");
+      console.error("Erro ao alterar atividade:", err);
+      alert("Erro ao alterar status.");
       renderizarTabela();
     });
   }
