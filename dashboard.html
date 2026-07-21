@@ -11,6 +11,10 @@
   h1 { font-size: 20px; color: #222; }
   #btnSair { background: #eee; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; }
 
+  .sistemas { display: flex; gap: 8px; margin-bottom: 16px; }
+  .sistemas button { padding: 10px 18px; border: 2px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; }
+  .sistemas button.ativo { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
   .card { background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
   .card .valor { font-size: 24px; font-weight: bold; color: #222; }
@@ -23,6 +27,8 @@
   table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
   th, td { padding: 12px; text-align: left; font-size: 13px; border-bottom: 1px solid #eee; }
   th { background: #fafafa; color: #555; font-size: 12px; text-transform: uppercase; }
+
+  .badge-sistema { padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; background: #EDE7F6; color: #4527A0; }
 
   .status { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block; }
   .status.teste { background: #FFF3E0; color: #E65100; }
@@ -43,6 +49,12 @@
   <h1>Painel Administrativo — Lojas</h1>
   <button id="btnSair" onclick="sair()">Sair</button>
 </header>
+
+<div class="sistemas">
+  <button class="ativo" data-sistema="todos" onclick="selecionarSistema('todos')">Todos os apps</button>
+  <button data-sistema="gas" onclick="selecionarSistema('gas')">🔥 Gás</button>
+  <button data-sistema="bv_delivery" onclick="selecionarSistema('bv_delivery')">🛵 BV Delivery</button>
+</div>
 
 <div class="cards">
   <div class="card"><div class="valor" id="totalLojas">-</div><div class="label">Total de lojas</div></div>
@@ -65,6 +77,7 @@
   <thead>
     <tr>
       <th>Loja</th>
+      <th id="thSistema" style="display:none;">Sistema</th>
       <th>Status</th>
       <th>Pedidos / Semana</th>
       <th>Valor devido</th>
@@ -94,8 +107,14 @@
 
   const ADMIN_UID = "J4kDE5WmWETA52bpK2EnDj6LhLw2";
 
+  const nomesSistemas = {
+    gas: "🔥 Gás",
+    bv_delivery: "🛵 BV Delivery"
+  };
+
   let lojasCache = [];
   let filtroAtual = "todas";
+  let sistemaAtual = "todos";
 
   auth.onAuthStateChanged((user) => {
     if (!user || user.uid !== ADMIN_UID) {
@@ -139,6 +158,16 @@
     return data.toLocaleDateString("pt-BR");
   }
 
+  function selecionarSistema(sistema) {
+    sistemaAtual = sistema;
+    document.querySelectorAll(".sistemas button").forEach(b => b.classList.remove("ativo"));
+    document.querySelector(`[data-sistema="${sistema}"]`).classList.add("ativo");
+
+    document.getElementById("thSistema").style.display = sistema === "todos" ? "" : "none";
+
+    renderizar();
+  }
+
   function filtrar(tipo) {
     filtroAtual = tipo;
     document.querySelectorAll(".filtros button").forEach(b => b.classList.remove("ativo"));
@@ -150,12 +179,16 @@
     document.getElementById("loading").style.display = "none";
     document.getElementById("tabelaLojas").style.display = "table";
 
-    let totalTeste = 0, totalAtivas = 0, totalBloqueadas = 0, totalReceber = 0;
+    let totalTeste = 0, totalAtivas = 0, totalBloqueadas = 0, totalReceber = 0, totalGeral = 0;
     const corpo = document.getElementById("corpoTabela");
     corpo.innerHTML = "";
 
     lojasCache.forEach((loja) => {
+      // Filtro por sistema (loja sem campo "sistema" é tratada como legado, não aparece em filtros específicos)
+      if (sistemaAtual !== "todos" && loja.sistema !== sistemaAtual) return;
+
       const status = calcularStatus(loja);
+      totalGeral++;
       if (status === "teste") totalTeste++;
       if (status === "ativa") totalAtivas++;
       if (status === "bloqueada") totalBloqueadas++;
@@ -167,10 +200,16 @@
       if (filtroAtual !== "todas" && filtroAtual !== status) return;
 
       const statusLabel = { teste: "Em teste", ativa: "Ativa", bloqueada: "Bloqueada" }[status];
+      const sistemaLabel = nomesSistemas[loja.sistema] || (loja.sistema || "—");
+
+      const colunaSistema = sistemaAtual === "todos"
+        ? `<td><span class="badge-sistema">${sistemaLabel}</span></td>`
+        : "";
 
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${loja.nome || "(sem nome)"}</td>
+        ${colunaSistema}
         <td><span class="status ${status}">${statusLabel}</span></td>
         <td>${pedidos}</td>
         <td>R$ ${valorDevido.toFixed(2)}</td>
@@ -187,7 +226,7 @@
       corpo.appendChild(tr);
     });
 
-    document.getElementById("totalLojas").textContent = lojasCache.length;
+    document.getElementById("totalLojas").textContent = totalGeral;
     document.getElementById("totalTeste").textContent = totalTeste;
     document.getElementById("totalAtivas").textContent = totalAtivas;
     document.getElementById("totalBloqueadas").textContent = totalBloqueadas;
