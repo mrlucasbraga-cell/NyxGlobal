@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belo Vale Delivery - Account & Data Deletion</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --primary:#ff6f00;
+    --secondary:#ff8f00;
+    --dark:#0f172a;
+    --text:#475569;
+    --light:#f8fafc;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--light);
+    color:var(--text);
+    line-height:1.8;
+}
+
+.hero{
+    padding:100px 20px;
+    text-align:center;
+    background:
+    radial-gradient(circle at top left,#ff8f0022,transparent 40%),
+    radial-gradient(circle at bottom right,#ff6f0022,transparent 40%),
+    linear-gradient(135deg,#0f172a,#111827);
+    position:relative;
+    overflow:hidden;
+}
+
+.hero::before{
+    content:'';
+    position:absolute;
+    width:600px;
+    height:600px;
+    border-radius:50%;
+    background:linear-gradient(45deg,#ff6f00,#ff8f00);
+    filter:blur(140px);
+    opacity:.2;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:900px;
+    margin:auto;
+}
+
+.badge{
+    display:inline-block;
+    padding:10px 18px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.15);
+    backdrop-filter:blur(10px);
+    color:white;
+    margin-bottom:20px;
+}
+
+.hero h1{
+    color:white;
+    font-size:clamp(2.5rem,6vw,5rem);
+    font-weight:800;
+    margin-bottom:20px;
+}
+
+.hero p{
+    color:#cbd5e1;
+    font-size:1.1rem;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:80px 20px;
+}
+
+.language{
+    margin-bottom:60px;
+}
+
+.language-header{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:30px;
+}
+
+.flag{
+    font-size:2rem;
+}
+
+.language h2{
+    color:var(--dark);
+    font-size:2rem;
+}
+
+.policy-card{
+    background:white;
+    border-radius:28px;
+    padding:40px;
+    box-shadow:0 15px 50px rgba(15,23,42,.08);
+}
+
+.policy-card h3{
+    color:var(--dark);
+    margin-top:35px;
+    margin-bottom:10px;
+    font-size:1.2rem;
+}
+
+.policy-card p{
+    margin-bottom:15px;
+}
+
+.steps-list{
+    background:#f8fafc;
+    padding:20px 20px 20px 40px;
+    border-radius:16px;
+    margin-top:15px;
+    margin-bottom:20px;
+}
+
+.steps-list li{
+    margin-bottom:10px;
+}
+
+.contact-card{
+    margin-top:50px;
+    background:linear-gradient(135deg,#ff6f00,#ff8f00);
+    color:white;
+    border-radius:28px;
+    padding:40px;
+}
+
+.contact-card h3{
+    margin-bottom:15px;
+}
+
+.footer{
+    background:#0f172a;
+    text-align:center;
+    padding:40px 20px;
+}
+
+.footer p{
+    color:#94a3b8;
+}
+
+@media(max-width:768px){
+
+.policy-card{
+    padding:25px;
+}
+
+.hero h1{
+    font-size:2.5rem;
+}
+
+.language h2{
+    font-size:1.5rem;
+}
+
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+<div class="hero-content">
+
+<div class="badge">
+🗑️ Belo Vale Delivery
+</div>
+
+<h1>Account & Data Deletion</h1>
+
+<p>
+Request the deletion of your account and personal data from Belo Vale Delivery.
+</p>
+
+</div>
+</section>
+
+<div class="container">
+
+<!-- ENGLISH -->
+<section class="language">
+
+<div class="language-header">
+<div class="flag">🇺🇸</div>
+<h2>Account & Data Deletion Request</h2>
+</div>
+
+<div class="policy-card">
+
+<p><strong>App Name:</strong> Belo Vale Delivery</p>
+<p><strong>Developer:</strong> NyxGlobal Apps</p>
+
+<p>
+In accordance with Google Play Developer Policies, users of the <strong>Belo Vale Delivery</strong> application have full right to request the complete deletion of their user accounts and associated personal data at any time.
+</p>
+
+<h3>How to Request Account Deletion</h3>
+
+<p>You can request account deletion in two simple ways:</p>
+
+<ol class="steps-list">
+<li><strong>Option 1 (In-App):</strong> Log in to the application, navigate to <em>Profile / Settings</em>, and select <em>"Delete Account"</em>. Confirm your decision.</li>
+<li><strong>Option 2 (By Email):</strong> Send an email to <strong>mr.lucasbraga@gmail.com</strong> with the subject line <em>"Account Deletion Request - Belo Vale Delivery"</em>, including the registered email address associated with your account.</li>
+</ol>
+
+<h3>What Data Is Deleted?</h3>
+<p>Upon receiving and confirming your request, we immediately delete:</p>
+<ul class="steps-list">
+<li>Your profile identity (Name, Email address, Phone number).</li>
+<li>Your authentication records in Firebase Authentication.</li>
+<li>Saved delivery addresses and digital loyalty card progress.</li>
+</ul>
+
+<h3>Data Retention</h3>
+<p>
+Financial order transaction histories (completed orders) may be retained anonymously in aggregated database backups for up to 90 days solely to comply with legal accounting and fraud protection regulations.
+</p>
+
+</div>
+
+</section>
+
+<!-- SPANISH -->
+<section class="language">
+
+<div class="language-header">
+<div class="flag">🇪🇸</div>
+<h2>Solicitud de Eliminación de Cuenta y Datos</h2>
+</div>
+
+<div class="policy-card">
+
+<p><strong>Nombre de la aplicación:</strong> Belo Vale Delivery</p>
+<p><strong>Desarrollador:</strong> NyxGlobal Apps</p>
+
+<p>
+De acuerdo con las Políticas de Desarrolladores de Google Play, los usuarios de la aplicación <strong>Belo Vale Delivery</strong> tienen pleno derecho a solicitar la eliminación completa de su cuenta y datos personales asociados en cualquier momento.
+</p>
+
+<h3>Cómo solicitar la eliminación de la cuenta</h3>
+
+<p>Puede solicitar la eliminación de dos formas sencillas:</p>
+
+<ol class="steps-list">
+<li><strong>Opción 1 (En la app):</strong> Inicie sesión en la aplicación, vaya a <em>Perfil / Ajustes</em> y seleccione <em>"Eliminar cuenta"</em>. Confirme la solicitud.</li>
+<li><strong>Opción 2 (Por correo):</strong> Envíe un correo electrónico a <strong>mr.lucasbraga@gmail.com</strong> con el asunto <em>"Solicitud de eliminación de cuenta - Belo Vale Delivery"</em> e incluya el correo electrónico registrado.</li>
+</ol>
+
+<h3>¿Qué datos se eliminan?</h3>
+<p>Una vez confirmada la solicitud, eliminamos permanentemente:</p>
+<ul class="steps-list">
+<li>Su perfil personal (Nombre, Correo electrónico y Teléfono).</li>
+<li>El registro de autenticación en Firebase Authentication.</li>
+<li>Direcciones guardadas e historial de tarjetas de fidelidad.</li>
+</ul>
+
+<h3>Retención de Datos</h3>
+<p>
+Los registros de pedidos anteriores pueden conservarse de forma anónima hasta por 90 días exclusivamente para cumplir con obligaciones legales y registros contables del comercio.
+</p>
+
+</div>
+
+</section>
+
+<!-- PORTUGUESE -->
+<section class="language">
+
+<div class="language-header">
+<div class="flag">🇧🇷</div>
+<h2>Solicitação de Exclusão de Conta e Dados</h2>
+</div>
+
+<div class="policy-card">
+
+<p><strong>Nome do Aplicativo:</strong> Belo Vale Delivery</p>
+<p><strong>Desenvolvedor:</strong> NyxGlobal Apps</p>
+
+<p>
+Em conformidade com as Políticas de Desenvolvedor do Google Play, os usuários do aplicativo <strong>Belo Vale Delivery</strong> possuem total direito de solicitar a exclusão definitiva de sua conta de usuário e de todos os seus dados pessoais armazenados.
+</p>
+
+<h3>Como solicitar a exclusão de conta</h3>
+
+<p>Você pode solicitar a exclusão da sua conta de duas maneiras rápidas:</p>
+
+<ol class="steps-list">
+<li><strong>Opção 1 (Pelo Aplicativo):</strong> Faça login no aplicativo Belo Vale Delivery, acesse a aba <em>Perfil / Configurações</em> e toque na opção <em>"Excluir Minha Conta"</em>. Confirme a ação.</li>
+<li><strong>Opção 2 (Por E-mail):</strong> Envie um e-mail para <strong>mr.lucasbraga@gmail.com</strong> com o assunto <em>"Exclusão de Conta - Belo Vale Delivery"</em> informando o e-mail cadastrado que deseja remover.</li>
+</ol>
+
+<h3>Quais dados são excluídos?</h3>
+<p>Após o processamento e confirmação da solicitação, excluímos permanentemente:</p>
+
+<ul class="steps-list">
+<li>Dados de cadastro (Nome, E-mail e Telefone).</li>
+<li>Credenciais de login registradas no Firebase Authentication.</li>
+<li>Endereços de entrega salvos e o progresso no Cartão Fidelidade digital.</li>
+</ul>
+
+<h3>Retenção de Dados</h3>
+<p>
+O histórico financeiro de pedidos concluídos pode ser mantido de forma anônima e desvinculada por até 90 dias, exclusivamente para cumprimento de obrigações legais, contábeis e prevenção a fraudes.
+</p>
+
+</div>
+
+</section>
+
+<div class="contact-card">
+
+<h3>NyxGlobal Apps™</h3>
+
+<p>
+Suporte e Gerenciamento de Dados<br>
+Belo Vale, MG - Brasil
+</p>
+
+<p>
+mr.lucasbraga@gmail.com
+</p>
+
+</div>
+
+</div>
+
+<footer class="footer">
+<p>© 2026 NyxGlobal Apps. Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>
