@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BV Loja - Privacy Policy</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --primary:#6366f1;
+    --secondary:#8b5cf6;
+    --dark:#0f172a;
+    --text:#475569;
+    --light:#f8fafc;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--light);
+    color:var(--text);
+    line-height:1.8;
+}
+
+.hero{
+    padding:100px 20px;
+    text-align:center;
+    background:
+    radial-gradient(circle at top left,#8b5cf622,transparent 40%),
+    radial-gradient(circle at bottom right,#6366f122,transparent 40%),
+    linear-gradient(135deg,#0f172a,#111827);
+    position:relative;
+    overflow:hidden;
+}
+
+.hero::before{
+    content:'';
+    position:absolute;
+    width:600px;
+    height:600px;
+    border-radius:50%;
+    background:linear-gradient(45deg,#6366f1,#8b5cf6);
+    filter:blur(140px);
+    opacity:.2;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:900px;
+    margin:auto;
+}
+
+.badge{
+    display:inline-block;
+    padding:10px 18px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.15);
+    backdrop-filter:blur(10px);
+    color:white;
+    margin-bottom:20px;
+}
+
+.hero h1{
+    color:white;
+    font-size:clamp(2.5rem,6vw,5rem);
+    font-weight:800;
+    margin-bottom:20px;
+}
+
+.hero p{
+    color:#cbd5e1;
+    font-size:1.1rem;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:80px 20px;
+}
+
+.language{
+    margin-bottom:60px;
+}
+
+.language-header{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:30px;
+}
+
+.flag{
+    font-size:2rem;
+}
+
+.language h2{
+    color:var(--dark);
+    font-size:2rem;
+}
+
+.policy-card{
+    background:white;
+    border-radius:28px;
+    padding:40px;
+    box-shadow:0 15px 50px rgba(15,23,42,.08);
+}
+
+.policy-card h3{
+    color:var(--dark);
+    margin-top:35px;
+    margin-bottom:10px;
+    font-size:1.2rem;
+}
+
+.policy-card p{
+    margin-bottom:15px;
+}
+
+.permissions{
+    background:#f8fafc;
+    padding:20px;
+    border-radius:16px;
+    margin-top:15px;
+}
+
+.permissions li{
+    margin-left:20px;
+    margin-bottom:10px;
+}
+
+.contact-card{
+    margin-top:50px;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+    color:white;
+    border-radius:28px;
+    padding:40px;
+}
+
+.contact-card h3{
+    margin-bottom:15px;
+}
+
+.footer{
+    background:#0f172a;
+    text-align:center;
+    padding:40px 20px;
+}
+
+.footer p{
+    color:#94a3b8;
+}
+
+@media(max-width:768px){
+
+.policy-card{
+    padding:25px;
+}
+
+.hero h1{
+    font-size:2.5rem;
+}
+
+.language h2{
+    font-size:1.5rem;
+}
+
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+<div class="hero-content">
+
+<div class="badge">
+🏪 BV Loja
+</div>
+
+<h1>Privacy Policy</h1>
+
+<p>
+Your privacy and merchant data security are our top priorities.
+</p>
+
+</div>
+</section>
+
+<div class="container">
+
+<!-- ENGLISH -->
+<section class="language">
+
+<div class="language-header">
+<div class="flag">🇺🇸</div>
+<h2>Privacy Policy</h2>
+</div>
+
+<div class="policy-card">
+
+<p><strong>Last updated:</strong> July 2026</p>
+
+<p>
+This Privacy Policy governs the use of the mobile application <strong>BV Loja</strong> (hereinafter referred to as the "Application"), created for Android devices. The Application is an exclusive business management tool designed for partner merchants operating in collaboration with <strong>NyxGlobal</strong>. It allows merchants to receive, accept, manage orders, and update store catalogs in real time.
+</p>
+
+<h3>1. Information Collection and Use</h3>
+
+<p>
+To enable order processing and store operations, the Application processes account credentials (merchant email and authentication tokens) and store management data (product catalogs, pricing, order statuses, and store business details). This information is transmitted securely using encrypted protocols (HTTPS/SSL) solely to fulfill commercial delivery services and platform operations. We do not sell or monetize merchant data.
+</p>
+
+<h3>2. Device Permissions</h3>
+
+<p>To ensure proper order management and operational alerts, the Application requires the following device permissions:</p>
+
+<div class="permissions">
+<ul>
+<li><strong>Notifications:</strong> Required to alert merchants immediately when new incoming orders arrive or when order status changes occur.</li>
+<li><strong>Internet & Network State:</strong> Required to sync order updates, catalog modifications, and store availability with backend servers in real time.</li>
+</ul>
+</div>
+
+<p>
+These permissions are used strictly for functional order management operations and are never used to log personal device data.
+</p>
+
+<h3>3. Account Security and Partner Access</h3>
+
+<p>
+Access to <strong>BV Loja</strong> is restricted exclusively to authorized partner merchants under direct agreement with NyxGlobal. Merchant accounts are authenticated through secure infrastructure (Firebase Authentication). Merchants are responsible for maintaining the confidentiality of their access credentials.
+</p>
+
+<h3>4. Data Sharing and Third Parties</h3>
+
+<p>
+Merchant operational data is shared only with the main consumer platform (Belo Vale Delivery) strictly to display store availability, active items, and order status updates to end customers. No data is shared with third-party advertisers.
+</p>
+
+<h3>5. Changes to This Privacy Policy</h3>
+
+<p>
+We may update our Privacy Policy periodically to reflect platform updates. Partner merchants will be notified of major updates through official channels.
+</p>
+
+</div>
+
+</section>
+
+<!-- SPANISH -->
+<section class="language">
+
+<div class="language-header">
+<div class="flag">🇪🇸</div>
+<h2>Política de Privacidad</h2>
+</div>
+
+<div class="policy-card">
+
+<p><strong>Última actualización:</strong> Julio de 2026</p>
+
+<p>
+Esta Política de Privacidad regula el uso de la aplicación móvil <strong>BV Loja</strong> (en adelante, la "Aplicación"), desarrollada para dispositivos Android. La Aplicación es una herramienta exclusiva de gestión comercial diseñada para comerciantes asociados que operan en colaboración con <strong>NyxGlobal</strong>. Permite a los comercios recibir, aceptar, gestionar pedidos y actualizar sus catálogos en tiempo real.
+</p>
+
+<h3>1. Recopilación y Uso de la Información</h3>
+
+<p>
+Para permitir el procesamiento de pedidos y la gestión del comercio, la Aplicación procesa credenciales de cuenta (correo electrónico del comerciante y tokens de autenticación) e información comercial (catálogo de productos, precios, estado de pedidos e información del establecimiento). Todos los datos se transmiten de forma segura mediante protocolos encriptados (HTTPS/SSL) únicamente para la gestión del servicio de entregas. No vendemos ni monetizamos datos comerciales.
+</p>
+
+<h3>2. Permisos del Dispositivo</h3>
+
+<p>Para garantizar una gestión adecuada de pedidos y alertas operativas, la Aplicación requiere los siguientes permisos:</p>
+
+<div class="permissions">
+<ul>
+<li><strong>Notificaciones:</strong> Necesario para alertar inmediatamente al comerciante sobre nuevos pedidos entrantes o cambios de estado.</li>
+<li><strong>Internet y Estado de Red:</strong> Necesario para sincronizar las actualizaciones de pedidos, cambios de catálogo y disponibilidad del local en tiempo real.</li>
+</ul>
+</div>
+
+<p>
+Estos permisos se utilizan estrictamente para el funcionamiento comercial de la plataforma y nunca para recopilar información privada del dispositivo.
+</p>
+
+<h3>3. Seguridad de la Cuenta y Acceso de Socios</h3>
+
+<p>
+El acceso a <strong>BV Loja</strong> está restringido exclusivamente a comerciantes autorizados en colaboración con NyxGlobal. Las cuentas de usuario se autentican mediante infraestructura segura (Firebase Authentication). Los comerciantes son responsables de mantener la confidencialidad de sus datos de acceso.
+</p>
+
+<h3>4. Compartición de Datos y Terceros</h3>
+
+<p>
+Los datos operativos del comercio se comparten únicamente con la plataforma principal de clientes (Belo Vale Delivery) exclusivamente para mostrar la disponibilidad del establecimiento, productos activos y estado del pedido al cliente final. No se comparten datos con anunciantes de terceros.
+</p>
+
+<h3>5. Cambios a esta Política de Privacidad</h3>
+
+<p>
+Podemos actualizar nuestra Política de Privacidad periódicamente. Se notificará a los comerciantes asociados sobre cualquier cambio relevante mediante los canales oficiales de comunicación.
+</p>
+
+</div>
+
+</section>
+
+<!-- PORTUGUESE -->
+<section class="language">
+
+<div class="language-header">
+<div class="flag">🇧🇷</div>
+<h2>Política de Privacidade</h2>
+</div>
+
+<div class="policy-card">
+
+<p><strong>Última atualização:</strong> Julho de 2026</p>
+
+<p>
+Esta Política de Privacidade rege o uso do aplicativo móvel <strong>BV Loja</strong> (doravante referido como "Aplicativo"), desenvolvido para dispositivos Android. O Aplicativo é uma ferramenta exclusiva de gestão empresarial e operacional destinada a lojistas parceiros em cooperação com a <strong>NyxGlobal</strong>, permitindo o recebimento, aceite, gerenciamento de pedidos e atualização de catálogos em tempo real.
+</p>
+
+<h3>1. Coleta e Uso de Informações</h3>
+
+<p>
+Para viabilizar a operação comercial e a gestão de pedidos, o Aplicativo processa credenciais de acesso (e-mail do lojista e tokens de autenticação) e dados operacionais da loja (catálogo de produtos, preços, status de pedidos e dados do estabelecimento). As informações são transmitidas com segurança por conexões criptografadas (HTTPS/SSL) estritamente para o cumprimento do serviço de delivery. Não comercializamos dados operacionais de nossos parceiros.
+</p>
+
+<h3>2. Permissões do Dispositivo</h3>
+
+<p>Para o funcionamento correto e recebimento de alertas operacionais, o Aplicativo solicita as seguintes permissões:</p>
+
+<div class="permissions">
+<ul>
+<li><strong>Notificações:</strong> Necessária para alertar o lojista instantaneamente sobre a chegada de novos pedidos e atualizações de status.</li>
+<li><strong>Acesso à Internet e Estado da Rede:</strong> Necessária para sincronizar pedidos, alterações no cardápio e status da loja em tempo real com nossos servidores.</li>
+</ul>
+</div>
+
+<p>
+Essas permissões são utilizadas exclusivamente para a gestão operacional das vendas e nunca para coletar dados pessoais não relacionados ao uso do sistema.
+</p>
+
+<h3>3. Segurança da Conta e Acesso de Lojistas</h3>
+
+<p>
+O acesso ao <strong>BV Loja</strong> é restrito estritamente a lojistas devidamente cadastrados e autorizados em parceria com a NyxGlobal. As contas são autenticadas por infraestrutura segura (Firebase Authentication). O lojista é responsável pela guarda e confidencialidade de suas credenciais de acesso.
+</p>
+
+<h3>4. Compartilhamento de Dados</h3>
+
+<p>
+Os dados operacionais da loja são compartilhados estritamente com o aplicativo dos clientes (Belo Vale Delivery) para exibição do catálogo, horários de funcionamento e status do pedido em andamento. Nenhum dado é compartilhado com empresas de publicidade ou terceiros não envolvidos na operação.
+</p>
+
+<h3>5. Alterações a Esta Política de Privacidade</h3>
+
+<p>
+Podemos atualizar esta Política de Privacidade periodicamente para refletir melhorias do sistema. Lojistas parceiros serão informados sobre alterações relevantes através de nossos canais diretos de suporte.
+</p>
+
+</div>
+
+</section>
+
+<div class="contact-card">
+
+<h3>NyxGlobal Apps™</h3>
+
+<p>
+Suporte e Gerenciamento de Plataforma<br>
+Belo Vale, MG - Brasil
+</p>
+
+<p>
+support@nyxglobalapps.com
+</p>
+
+</div>
+
+</div>
+
+<footer class="footer">
+<p>© 2026 NyxGlobal Apps. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>
